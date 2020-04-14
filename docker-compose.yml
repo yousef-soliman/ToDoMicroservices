@@ -1,0 +1,31 @@
+
+version: '3'
+
+services:
+  todoviewservice:
+    build: ./ToDoViewService
+    command: python3 manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./ToDoViewService:/code
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+
+  todoservice:
+    build: ./ToDoService
+    volumes:
+      - ./ToDoService:/app
+    ports:
+      - "8088:3000"
+
+  db:
+    image: postgres:10.0
+    environment:
+        - POSTGRES_PASSWORD=root
+        - POSTGRES_USER=root
+        - PGDATA=/var/lib/postgresql/data/pgdata
+    volumes:
+        - db-data:/var/lib/postgresql/data/pgdata:rw,Z
+volumes:
+    db-data:
