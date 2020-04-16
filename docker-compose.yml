@@ -27,5 +27,18 @@ services:
         - PGDATA=/var/lib/postgresql/data/pgdata
     volumes:
         - db-data:/var/lib/postgresql/data/pgdata:rw,Z
+  zookeeper:
+    image: wurstmeister/zookeeper
+    ports:
+      - "2181:2181"
+  kafka:
+    build: ./kafka-docker
+    ports:
+      - "9092"
+    environment:
+      KAFKA_ADVERTISED_HOST_NAME: localhost 
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
 volumes:
     db-data:
